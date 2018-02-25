@@ -12,6 +12,10 @@ This became an issue for me when using my various Level-based Traits and Talent-
 
 Many developers have asked how to make it so that the minumum amount of damage that can be infliced on a hit is 1 instead of 0.  These plugins do just that.  Make sure you use the one that coresponds with the other plugins you are using.
 
+## Disable Smooth Targeting
+
+The original Final Fantasy had a unique quirk.  While it used the default battle system, your characters would attack whatever you told them to and the game wouldn't adjust the target if they were attacking a dead opponent.  Most games since then have implemented target smoothing which handles this adjustment.  While this is pretty standard now, it comes with a side effect.  Now most battles can be won by just spamming the attack button and killing one enemy at a time and that is often times the best strategy to win fights.  If you want to return to the days of making your players more carefully plan out their attacks by removing target smoothing, install this plugin.
+
 ## Terms of Use
 
 This plugin can be used in commercial or non-commercial projects.
