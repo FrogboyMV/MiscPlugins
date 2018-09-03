@@ -126,20 +126,7 @@ function convertPluginParams (objRead, objWrite, level) {
     // Arrays
     if (Array.isArray(objRead)) {
         for (var i=0; i<objRead.length; i++) {
-            var value = objRead[i];
-            if (value !== "") {
-                if (!isNaN(value)) value = parseFloat(value);
-                else if (value == "true") value = true;
-                else if (value == "false") value = false;
-                else {
-                    try {
-                        value = JSON.parse(value);
-                    }
-                    catch (e) {
-                        value = value;
-                    }
-                }
-            }
+            var value = formatValue(objRead[i]);
 
             if (typeof value != "object") {
                 objWrite.push(value);
@@ -153,20 +140,7 @@ function convertPluginParams (objRead, objWrite, level) {
     else {
         // Objects
         Object.keys(objRead).forEach(function(key, index) {
-            var value = objRead[key];
-            if (value !== "") {
-                if (!isNaN(value)) value = parseFloat(value);
-                else if (value == "true") value = true;
-                else if (value == "false") value = false;
-                else {
-                    try {
-                        value = JSON.parse(value);
-                    }
-                    catch (e) {
-                        value = value;
-                    }
-                }
-            }
+            var value = formatValue(objRead[key]);
 
             if (typeof value != "object") {
                 objWrite[makeKey(key)] = value;
@@ -178,6 +152,25 @@ function convertPluginParams (objRead, objWrite, level) {
         });
     }
 
+    // Formats and types parameter data
+    function formatValue(value) {
+        if (value !== "") {
+            if (!isNaN(value)) value = parseFloat(value);
+            else if (value == "true") value = true;
+            else if (value == "false") value = false;
+            else {
+                try {
+                    value = JSON.parse(value);
+                }
+                catch (e) {
+                    value = value;
+                }
+            }
+        }
+        return value;
+    }
+
+    // Converts parameter names into camel case
     function makeKey(param) {
         return param.slice(0, 1).toLowerCase() + param.slice(1).replace(/[^\w]/gi, "");
     }
