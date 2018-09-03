@@ -2,6 +2,10 @@
 
 A series of small, miscellaneous plugins for RPG Maker MV.  These plugins are typically just installed and change a single aspect of a game.
 
+## Pretty Plugin Params
+
+This plugin completely corrects the major problem with using the MV 1.5 plugin parameter format by converting them from a gnarly mess of string data into a nice, easy to use JSON object like they were intended to be.  With this plugin and one line of code, you'll get a cleanly formatted object with all of the data properly typed.  Strings remain strings, numbers remain numbers, arrays stay arrays, objects are still objects and arrays of objects come out as arrays of objects.  It's a beautiful thing, really. Brings a tear of joy to your eye.
+
 ## Skill Type Dupe Fix
 
 By default in RPG Maker MV, if a Skill Type is added to an actor more than once, it'll show up in the command list for Skills multiple times.  This plugin corrects that.
