@@ -75,6 +75,63 @@ Imported.PrettyPluginParams = true;
  * That's it!  All of your plugin parameters, no matter how complex, can now be
  * accessed in the variable you provided.  Couldn't get much easier than that!
  *
+ * In addition to easily reading in plugin parameters, there's a couple of other
+ * things you can do with this.  Now that your plugin parameters are all neatly
+ * tucked away in a JSON object, they are super simple to change in-game now.
+ * Say you have a parameter that sorts Quests either ascending or decending.
+ * You can give your players the option to change this to their liking in the
+ * game.  If you allow these parameters to be changed in-game, though, you
+ * probably want to save these changes so that they aren't lost when the player
+ * closes the game, comes back later and the reloads their game.  That's really
+ * easy to do now.
+ *
+ * The example below assumes that there is a plugin parameter named
+ * saveParamObject (or Save Param Object if camel-case is turned on).  It
+ * aliases setupNewGame, makeSaveContents and extractSaveContents to handle
+ * resetting parameters on new game, saving them and loading them so that any
+ * changes can be preserved.  I now include these options by default in every
+ * plugin I make.
+ *
+ * // Refresh plugin parameters on new game
+ * var alias_DataManager_setupNewGame = DataManager.setupNewGame;
+ * DataManager.setupNewGame = function () {
+ *   alias_DataManager_setupNewGame.call(this);
+ *   convertPluginParams(PluginManager.parameters('Filename'), $pluginParams);
+ * }
+ *
+ * // Save File
+ * var alias_DataManager_MakeSaveContents = DataManager.makeSaveContents;
+ * DataManager.makeSaveContents = function() {
+ *   var contents = alias_DataManager_MakeSaveContents.call(this);
+ *   if ($pluginParams.saveParamObject === true) {
+ *       contents.pluginParams = $pluginParams;
+ *   }
+ *   return contents;
+ * }
+ *
+ * // Load File
+ * var alias_DataManager_ExtractSaveContents = DataManager.extractSaveContents;
+ * DataManager.extractSaveContents = function(contents) {
+ *   alias_DataManager_ExtractSaveContents.call(this, contents);
+ *   if ($pluginParams.saveParamObject === true) {
+ *       $pluginParams = contents.pluginParams;
+ *   }
+ * }
+ *
+ *
+ * Camel-case Properties - This option will convert your plugin's paramter
+ * names into more usable property names.  By default, the property names come
+ * over as the ATparam used in the plugin editor and will often contain
+ * white space so you'll end up with something like Class Id.  This forces you
+ * to use these property names with the less desirable bracket notation,
+ * something like $params['Class Id'].  Who wants to do that?  This option will
+ * ditch the spaces and lowercase the first letter so that you can refereence
+ * the property as $params.classId which is much cleaner.
+ *
+ * There is an option to define your parameter labels with ATtext and then
+ * use ATparam to make your property name anything you want (like classId). This
+ * is actually a better option and if you set up your plugin this way, leave
+ * this option off.
  *
  * ============================================================================
  * Terms of Use
@@ -109,6 +166,16 @@ Imported.PrettyPluginParams = true;
  * Version 1.0 - Initial release
  *
  * ============================================================================
+ *
+ * @param Parameters
+ *
+ * @param camelCaseProperties
+ * @text Camel-case Properties
+ * @parent Parameters
+ * @type boolean
+ * @default false
+ * @on Yes
+ * @off No
  */
 
 /** Converts RPG Maker MV plugin parameters to an easy to use JSON object
@@ -172,6 +239,9 @@ function convertPluginParams (objRead, objWrite, level) {
 
     // Converts parameter names into camel case
     function makeKey(param) {
-        return param.slice(0, 1).toLowerCase() + param.slice(1).replace(/[^\w]/gi, "");
+        if (PluginManager.parameters("PrettyPluginParams").camelCaseProperties == "true") {
+            return param.slice(0, 1).toLowerCase() + param.slice(1).replace(/[^\w]/gi, "");
+        }
+        return param;
     }
 }
